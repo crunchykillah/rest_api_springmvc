@@ -1,0 +1,127 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user_entity-table
+      author: volkov
+      changes:
+        - createTable:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: phone
+                  type: varchar(20)
+  - changeSet:
+      id: create-order_entity-table
+      author: volkov
+      changes:
+        - createTable:
+            tableName: order_entity
+            columns:
+              - column:
+                  name: order_id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: order_entity_user_entity_user_id_fk
+                    references: user_entity(user_id)
+              - column:
+                  name: order_date
+                  type: TIMESTAMP
+              - column:
+                  name: total_price
+                  type: DECIMAL
+  - changeSet:
+      id: create-product_entity-table
+      author: volkov
+      changes:
+        - createTable:
+            tableName: product_entity
+            columns:
+              - column:
+                  name: product_id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: price
+                  type: decimal
+  - changeSet:
+      id: create-order_product-table
+      author: volkov
+      changes:
+        - createTable:
+            tableName: order_product
+            columns:
+              - column:
+                  name: order_product_id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: order_product_order_entity_order_id_fk
+                    references: order_entity(order_id)
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: order_product_product_entity_product_id_fk
+                    references: product_entity(product_id)
+  - changeSet:
+      id: create-address_entity-table
+      author: volkov
+      changes:
+        - createTable:
+            tableName: address_entity
+            columns:
+              - column:
+                  name: address_id
+                  type: uuid
+                  defaultValueComputed: uuid_generate_v4()
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    unique: true
+                    foreignKeyName: address_entity_user_entity_user_id_fk
+                    references: user_entity(user_id)
+              - column:
+                  name: street
+                  type: varchar(255)
+              - column:
+                  name: city
+                  type: varchar(255)
+              - column:
+                  name: zip_code
+                  type: varchar(10)
